@@ -17,6 +17,6 @@ router.register('client/timetable', views.TimetableViewSet)
 
 
 urlpatterns = [
-    path('v1/docs/', include_docs_urls(title='Service API', public=False)),
+    path('v1/docs/', include_docs_urls(title='Service API')),
     path('v1/', include(router.urls))
 ]

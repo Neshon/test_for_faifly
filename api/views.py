@@ -32,11 +32,6 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     serializer_class = serializers.AppointmentSerializer
     permission_classes = (IsAdministrator,)
 
-    def perform_create(self, serializer):
-        print(self)
-        print(serializer)
-        serializer.save()
-
 
 class TimetableViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = Schedule.objects.all()

@@ -8,12 +8,12 @@ from . import views
 
 router = DefaultRouter()
 
-router.register('personal/locations', views.LocationViewSet)
-router.register('personal/workers', views.WorkerViewSet)
-router.register('personal/schedule', views.ScheduleViewSet)
-router.register('personal/appointment', views.AppointmentViewSet)
+router.register('staff/locations', views.LocationViewSet)
+router.register('staff/workers', views.WorkerViewSet)
+router.register('staff/schedule', views.ScheduleViewSet)
+router.register('staff/appointment', views.AppointmentViewSet)
 
-router.register('client/timetable', views.TimetableViewSet)
+router.register('client/schedule', views.TimetableViewSet)
 
 
 urlpatterns = [

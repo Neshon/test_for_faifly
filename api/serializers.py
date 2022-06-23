@@ -1,3 +1,5 @@
+import datetime
+
 from rest_framework import serializers
 
 from service.models import Location, Worker, Schedule, Appointment
@@ -23,6 +25,22 @@ class ScheduleSerializer(serializers.ModelSerializer):
         model = Schedule
         fields = '__all__'
 
+    def validate(self, data):
+        schedule = Schedule.objects.filter(location=data['location'],
+                                           date=data['date'])
+        for timeslot in schedule:
+            if data['start_time'] < timeslot.end_time:
+                if timeslot:
+                    raise serializers.ValidationError(
+                        "This place is occupied")
+                raise serializers.ValidationError(
+                    "At this time there is already a schedule")
+
+        if data['start_time'] > data['end_time']:
+            raise serializers.ValidationError(
+                "Start time cannot go after end time")
+        return data
+
 
 class TimetableSerializer(serializers.ModelSerializer):
     specialist = serializers.CharField(source='specialist.name',
@@ -43,3 +61,23 @@ class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Appointment
         fields = '__all__'
+
+    def validate(self, data):
+        schedule = data['schedule']
+        if data['end_time'] >= schedule.end_time:
+            raise serializers.ValidationError(
+                "Working time is over")
+        elif schedule.start_time >= data['start_time']:
+            raise serializers.ValidationError(
+                "Working time has not started yet")
+
+        appointments = Appointment.objects.filter(schedule=data['schedule'])
+        for appointment in appointments:
+            if data['start_time'] < appointment.end_time:
+                raise serializers.ValidationError(
+                    "Аppointment time is busye")
+
+        if data['start_time'] > data['end_time']:
+            raise serializers.ValidationError(
+                "Start time cannot go after end time")
+        return data

@@ -3,7 +3,7 @@ from django.db import models
 
 class Location(models.Model):
     name = models.CharField(max_length=128)
-    cabinet = models.IntegerField()
+    cabinet = models.PositiveIntegerField()
 
     def __str__(self):
         return f'{self.name}, cabinet: {self.cabinet}'
@@ -27,7 +27,7 @@ class Schedule(models.Model):
     date = models.DateField(null=False)
     start_time = models.TimeField(null=False)
     end_time = models.TimeField(null=False)
-    available = models.BooleanField(default=True)
+    # available = models.BooleanField(default=True)
 
     class Meta:
         unique_together = ['specialist', 'location', 'date', 'start_time',

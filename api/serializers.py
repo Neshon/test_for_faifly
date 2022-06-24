@@ -1,5 +1,3 @@
-import datetime
-
 from rest_framework import serializers
 
 from service.models import Location, Worker, Schedule, Appointment
@@ -75,7 +73,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
         for appointment in appointments:
             if data['start_time'] < appointment.end_time:
                 raise serializers.ValidationError(
-                    "Аppointment time is busye")
+                    "Appointment time is busy")
 
         if data['start_time'] > data['end_time']:
             raise serializers.ValidationError(

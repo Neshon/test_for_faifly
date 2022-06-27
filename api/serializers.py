@@ -26,11 +26,11 @@ class ScheduleSerializer(serializers.ModelSerializer):
     def validate(self, data):
         schedule = Schedule.objects.filter(location=data['location'],
                                            date=data['date'])
+        # todo make a func 
         for timeslot in schedule:
-            if data['start_time'] < timeslot.end_time:
-                if timeslot:
-                    raise serializers.ValidationError(
-                        "This place is occupied")
+            start_time_check = timeslot.start_time <= data['start_time'] <= timeslot.end_time
+            end_time_check = timeslot.start_time <= data['end_time'] <= timeslot.end_time
+            if start_time_check or end_time_check:
                 raise serializers.ValidationError(
                     "At this time there is already a schedule")
 
@@ -69,9 +69,11 @@ class AppointmentSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 "Working time has not started yet")
 
-        appointments = Appointment.objects.filter(schedule=data['schedule'])
-        for appointment in appointments:
-            if data['start_time'] < appointment.end_time:
+        appts = Appointment.objects.filter(schedule=data['schedule'])
+        for appt in appts:
+            start_time_check = appt.start_time <= data['start_time'] <= appt.end_time
+            end_time_check = appt.start_time <= data['end_time'] <= appt.end_time
+            if start_time_check or end_time_check:
                 raise serializers.ValidationError(
                     "Appointment time is busy")
 
